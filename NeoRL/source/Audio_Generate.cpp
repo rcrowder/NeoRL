@@ -114,20 +114,21 @@ int main() {
 	
 	cl::Image2D input = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), dimV, dimV);
 	std::vector<float> visibleStates(dimV * dimV, 0.0);
+	CArray fftBuffer(visibleStates.size());
 
 	std::vector<neo::PredictiveHierarchy::LayerDesc> layerDescs(4);
 
-	layerDescs[0]._size = { 48, 48 };
+	layerDescs[0]._size = { 32, 32 };
 	layerDescs[0]._feedForwardRadius = 12;
 	layerDescs[0]._predictiveRadius = 12;
 	layerDescs[0]._feedBackRadius = 12;
-	layerDescs[0]._predWeightAlpha = 0.004f;
-	layerDescs[1]._size = { 48, 48 };
-	layerDescs[1]._predWeightAlpha = 0.01f;
-	layerDescs[2]._size = { 48, 48 };
-	layerDescs[2]._predWeightAlpha = 0.01f;
-	layerDescs[3]._size = { 48, 48 };
-	layerDescs[3]._predWeightAlpha = 0.01f;
+	layerDescs[0]._predWeightAlpha = 0.008f;
+	layerDescs[1]._size = { 32, 32 };
+	layerDescs[1]._predWeightAlpha = 0.03f;
+	layerDescs[2]._size = { 32, 32 };
+	layerDescs[2]._predWeightAlpha = 0.03f;
+	layerDescs[3]._size = { 32, 32 };
+	layerDescs[3]._predWeightAlpha = 0.03f;
 
 	neo::PredictiveHierarchy ph;
 
@@ -150,10 +151,15 @@ int main() {
 				int si = start + i;
 
 				if (si < buffer.getSampleCount())
-					visibleStates[i] = compress(buffer.getSamples()[si]);
+					fftBuffer[i] = compress(buffer.getSamples()[si]);
 				else
-					visibleStates[i] = 0.0f;
+					fftBuffer[i] = 0.0f;
 			}
+
+			fft(fftBuffer);
+
+			for (int i = 0; i < aeSamplesSize; i++)
+				visibleStates[i] = fftBuffer[i].real();
 			
 			cs.getQueue().enqueueWriteImage(input, CL_TRUE, { 0, 0, 0 }, { static_cast<cl::size_type>(dimV), static_cast<cl::size_type>(dimV), 1 }, 0, 0, visibleStates.data());
 
@@ -170,7 +176,7 @@ int main() {
 	std::cout << "Generating extra..." << std::endl;
 
 	// Extend song
-	int extraFeatures = 700;
+	int extraFeatures = 2000;
 
 	std::vector<float> extraSamplesf((extraFeatures + 1) * trainStride, 0.0f);
 	std::vector<float> extraSamplesSums((extraFeatures + 1) * trainStride, 0.0f);
@@ -185,16 +191,21 @@ int main() {
 				int si = start + i;
 
 				if (si < buffer.getSampleCount())
-					visibleStates[i] = compress(buffer.getSamples()[si]);
+					fftBuffer[i] = compress(buffer.getSamples()[si]);
 				else
-					visibleStates[i] = 0.0f;
+					fftBuffer[i] = 0.0f;
 			}
+
+			fft(fftBuffer);
+
+			for (int i = 0; i < aeSamplesSize; i++)
+				visibleStates[i] = fftBuffer[i].real();
 
 			cs.getQueue().enqueueWriteImage(input, CL_TRUE, { 0, 0, 0 }, { static_cast<cl::size_type>(dimV), static_cast<cl::size_type>(dimV), 1 }, 0, 0, visibleStates.data());
 		}
 		else {
 			for (int i = 0; i < aeSamplesSize; i++)
-				visibleStates[i] = std::min(1.0f, std::max(-1.0f, std::min(1.0f, std::max(-1.0f, pred[i])) + noiseDist(generator) * 0.01f));
+				visibleStates[i] = std::min(1.0f, std::max(-1.0f, std::min(1.0f, std::max(-1.0f, pred[i])) + noiseDist(generator) * 0.4f));
 
 			cs.getQueue().enqueueWriteImage(input, CL_TRUE, { 0, 0, 0 }, { static_cast<cl::size_type>(dimV), static_cast<cl::size_type>(dimV), 1 }, 0, 0, visibleStates.data());
 		}
@@ -203,10 +214,15 @@ int main() {
 
 		cs.getQueue().enqueueReadImage(ph.getFirstLayerPred().getHiddenStates()[neo::_back], CL_TRUE, { 0, 0, 0 }, { static_cast<cl::size_type>(dimV), static_cast<cl::size_type>(dimV), 1 }, 0, 0, pred.data());
 
+		for (int i = 0; i < aeSamplesSize; i++)
+			fftBuffer[i] = Complex(pred[i], 0.0f);
+
+		ifft(fftBuffer);
+
 		int start = s * trainStride;
 
 		for (int i = 0; i < aeSamplesSize; i++) {
-			extraSamplesf[start + i] += pred[i];
+			extraSamplesf[start + i] += fftBuffer[i].real();
 			extraSamplesSums[start + i]++;
 		}
 

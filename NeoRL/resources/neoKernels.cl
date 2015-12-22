@@ -362,7 +362,7 @@ void kernel cscLearnHiddenWeightsTraces(read_only image2d_t rewards, read_only i
 				float visibleError = read_imagef(visibleErrors, visiblePosition).x;
 				float visibleState = read_imagef(visibleStates, visiblePosition).x;
 
-				float2 weight = (float2)(weightPrev.x +  reward * weightPrev.y, weightPrev.y * weightLambda + weightAlpha * ((visibleError - weightPrev.x) * state));
+				float2 weight = (float2)(weightPrev.x + reward * weightPrev.y, weightPrev.y * weightLambda + weightAlpha * ((visibleError - weightPrev.x) * state));
 
 				write_imagef(weightsFront, (int4)(hiddenPosition.x, hiddenPosition.y, wi, 0), (float4)(weight.x, weight.y, 0.0f, 0.0f));
 			}
@@ -691,7 +691,7 @@ void kernel predSolveHidden(read_only image2d_t hiddenSummationTemp,
 	
 	float sum = read_imagef(hiddenSummationTemp, hiddenPosition).x;
 	
-	float s = sigmoid(sum);
+	float s = sum;//sigmoid(sum);
 
 	write_imagef(hiddenStatesFront, hiddenPosition, (float4)(s));
 	write_imagef(hiddenActivationsFront, hiddenPosition, (float4)(s));
@@ -1325,13 +1325,13 @@ void kernel phBaseLineUpdate(read_only image2d_t errorsCurrent, read_only image2
 
 	float error = read_imagef(errorsCurrent, position).x;
 
-	float error2 = error * error;
+	float correctness = 1.0f - fabs(error);
 
 	float baseLinePrev = read_imagef(baseLinesBack, position).x;
 
-	float reward = (baseLinePrev - error2) > 0.0f ? 1.0f : 0.0f;
+	float reward = (baseLinePrev - correctness) > 0.0f ? 1.0f : 0.0f;
 
-	float baseLine = (1.0f - decay) * baseLinePrev + decay * error2;
+	float baseLine = (1.0f - decay) * baseLinePrev + decay * correctness;
 
 	write_imagef(baseLinesFront, position, (float4)(baseLine));
 	write_imagef(rewards, position, (float4)(reward));
@@ -1347,13 +1347,13 @@ void kernel phBaseLineUpdateSumError(read_only image2d_t errorsLower, read_only 
 
 	float error = read_imagef(errorsLower, position).x + read_imagef(errorsCurrent, position).x;
 
-	float error2 = error * error;
+	float correctness = 1.0f - fabs(error);
 
 	float baseLinePrev = read_imagef(baseLinesBack, position).x;
 
-	float reward = (baseLinePrev - error2) > 0.0f ? 1.0f : 0.0f;
+	float reward = (baseLinePrev - correctness) > 0.0f ? 1.0f : 0.0f;
 
-	float baseLine = (1.0f - decay) * baseLinePrev + decay * error2;
+	float baseLine = (1.0f - decay) * baseLinePrev + decay * correctness;
 
 	write_imagef(baseLinesFront, position, (float4)(baseLine));
 	write_imagef(rewards, position, (float4)(reward));
