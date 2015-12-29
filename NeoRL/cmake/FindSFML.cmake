@@ -55,6 +55,16 @@
 #   add_executable(myapp ...)
 #   target_link_libraries(myapp ${SFML_LIBRARIES})
 
+if(WIN32)
+    FILE(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+    FIND_FILE(SFML_ROOT sfml
+       ${_progFiles}
+       "C:/"
+       "C:/Program Files/"
+       "C:/usr/local/"
+    )
+endif ()
+
 # define the SFML_STATIC macro if static build was chosen
 if(SFML_STATIC_LIBRARIES)
     add_definitions(-DSFML_STATIC)
@@ -366,4 +376,3 @@ endif()
 if(SFML_FOUND AND NOT SFML_FIND_QUIETLY)
     message(STATUS "Found SFML ${SFML_VERSION_MAJOR}.${SFML_VERSION_MINOR}.${SFML_VERSION_PATCH} in ${SFML_INCLUDE_DIR}")
 endif()
-
