@@ -1,11 +1,11 @@
 #include "Settings.h"
 
+#if EXPERIMENT_SELECTION == EXPERIMENT_SEQUENCE_RECALL
+
 #include "neo/PredictiveHierarchy.h"
 
 #include <ctime>
 #include <iostream>
-
-#if EXPERIMENT_SELECTION == EXPERIMENT_SEQUENCE_RECALL
 
 int main() {
 	std::mt19937 generator(std::time(nullptr));

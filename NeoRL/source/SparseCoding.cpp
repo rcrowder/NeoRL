@@ -149,7 +149,7 @@ int main() {
 			sparseCoder.learn(cs, std::vector<cl::Image2D>(1, inputImage), 0.1f, 0.1f);
 		}
 
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
 			cl::array<cl::size_type, 3> origin = { 0, 0, 0 };
 			cl::array<cl::size_type, 3> region = { sampleWidth, sampleHeight, 1 };
 
@@ -167,7 +167,7 @@ int main() {
 				}
 
 			reconstructionTexture.loadFromImage(reconstructionImage);
-		}*/
+		}
 
 		// ----------------------------- Rendering -----------------------------
 

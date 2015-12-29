@@ -21,7 +21,7 @@ ExternalProject_Add(
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
   )
-include_directories("Box2D/src/Box2D/Box2D")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/Box2D/src/Box2D/Box2D")
 
 # OpenCL
 find_package(OpenCL REQUIRED)
@@ -55,6 +55,7 @@ set_property(TARGET NeoRL PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(NeoRL
                       ${OpenCL_LIBRARIES}
                       ${SFML_LIBRARIES}
+                      ${SFML_DEPENDENCIES}
                       ${FREETYPE_LIBRARIES}
                       ${JPEG_LIBRARIES})
 
