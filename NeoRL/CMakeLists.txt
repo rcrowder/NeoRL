@@ -33,12 +33,14 @@ include_directories(${OpenCL_INCLUDE_DIRS})
 # - http://gnuwin32.sourceforge.net/packages/freetype.htm
 # - http://gnuwin32.sourceforge.net/packages/jpeg.htm
 find_package(GNUWIN REQUIRED)
-find_package(FREETYPE REQUIRED)
+find_package(Freetype REQUIRED)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 find_package(JPEG REQUIRED)
 include_directories(${JPEG_INCLUDE_DIR})
 
-set(SFML_STATIC_LIBRARIES TRUE)
+if(WIN32)
+  set(SFML_STATIC_LIBRARIES TRUE)
+endif()
 find_package(SFML COMPONENTS graphics window system REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 

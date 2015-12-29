@@ -2,12 +2,15 @@
 
 #include <system/Uncopyable.h>
 
-#define CL_HPP_TARGET_OPENCL_VERSION 200
+#define CL_HPP_MINIMUM_OPENCL_VERSION 110
+#define CL_HPP_TARGET_OPENCL_VERSION 110
+
+#define CL_HPP_ENABLE_SIZE_T_COMPATIBILITY 
+#define CL_HPP_USE_CL_DEVICE_FISSION 
 
 #include <CL/cl2.hpp>
 
 #define SYS_DEBUG
-
 #define SYS_ALLOW_CL_GL_CONTEXT 0
 
 namespace sys {
