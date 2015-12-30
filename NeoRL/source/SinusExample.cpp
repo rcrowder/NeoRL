@@ -69,7 +69,7 @@ int main() {
 		}*/
 
 
-		std::cout << res[0] << std::endl;
+    std::cout << "Val: " << vals[0] << " Res: " << res[0] << std::endl;
 	}
 
 	return 0;

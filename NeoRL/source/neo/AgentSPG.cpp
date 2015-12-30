@@ -73,14 +73,14 @@ void AgentSPG::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &program
 
 			_layers[l]._inhibitedAction = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), _layers[l]._predAction.getHiddenSize().x, _layers[l]._predAction.getHiddenSize().y);
 
-			cs.getQueue().enqueueFillImage(_layers[l]._inhibitedAction, zeroColor, zeroOrigin, actionRegion);
+			neo::enqueueFillImage(_layers[l]._inhibitedAction, zeroColor, zeroOrigin, actionRegion);
 		}
 
 		cl::array<cl::size_type, 3> layerRegion = { _layerDescs[l]._hiddenSize.x, _layerDescs[l]._hiddenSize.y, 1 };
 
-		cs.getQueue().enqueueFillImage(_layers[l]._baseLines[_back], zeroColor, zeroOrigin, layerRegion);
-		cs.getQueue().enqueueFillImage(_layers[l]._reward, zeroColor, zeroOrigin, layerRegion);
-		cs.getQueue().enqueueFillImage(_layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
+		neo::enqueueFillImage(_layers[l]._baseLines[_back], zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(_layers[l]._reward, zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(_layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
 	}
 
 	{
@@ -91,7 +91,7 @@ void AgentSPG::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &program
 
 		_action = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), actionSize.x, actionSize.y);
 
-		cs.getQueue().enqueueFillImage(_action, zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(_action, zeroColor, zeroOrigin, layerRegion);
 	}
 
 	_baseLineUpdateKernel = cl::Kernel(program.getProgram(), "phBaseLineUpdate");
@@ -255,6 +255,6 @@ void AgentSPG::clearMemory(sys::ComputeSystem &cs) {
 	for (int l = 0; l < _layers.size(); l++) {
 		cl::array<cl::size_type, 3> layerRegion = { _layerDescs[l]._hiddenSize.x, _layerDescs[l]._hiddenSize.y, 1 };
 
-		cs.getQueue().enqueueFillImage(_layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
+		neo::enqueueFillImage(_layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
 	}
 }

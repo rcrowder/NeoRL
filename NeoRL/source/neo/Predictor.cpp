@@ -40,7 +40,7 @@ void Predictor::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &progra
 
 		vl._errors = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), vld._size.x, vld._size.y);
 
-		cs.getQueue().enqueueFillImage(vl._errors, zeroColor, zeroOrigin, { static_cast<cl::size_type>(vld._size.x), static_cast<cl::size_type>(vld._size.y), 1 });
+    neo::enqueueFillImage(vl._errors, zeroColor, zeroOrigin, { static_cast<cl::size_type>(vld._size.x), static_cast<cl::size_type>(vld._size.y), 1 });
 
 		int weightDiam = vld._radius * 2 + 1;
 
@@ -60,8 +60,8 @@ void Predictor::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &progra
 
 	_hiddenSummationTemp = createDoubleBuffer2D(cs, _hiddenSize, CL_R, CL_FLOAT);
 
-	cs.getQueue().enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
-	cs.getQueue().enqueueFillImage(_hiddenActivations[_back], zeroColor, zeroOrigin, hiddenRegion);
+  neo::enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
+  neo::enqueueFillImage(_hiddenActivations[_back], zeroColor, zeroOrigin, hiddenRegion);
 
 	// Create kernels
 	_activateKernel = cl::Kernel(program.getProgram(), "predActivate");
@@ -80,7 +80,7 @@ void Predictor::activate(sys::ComputeSystem &cs, const std::vector<cl::Image2D> 
 		cl::array<cl::size_type, 3> zeroOrigin = { 0, 0, 0 };
 		cl::array<cl::size_type, 3> hiddenRegion = { _hiddenSize.x, _hiddenSize.y, 1 };
 
-		cs.getQueue().enqueueFillImage(_hiddenSummationTemp[_back], zeroColor, zeroOrigin, hiddenRegion);
+    neo::enqueueFillImage(_hiddenSummationTemp[_back], zeroColor, zeroOrigin, hiddenRegion);
 	}
 
 	for (int vli = 0; vli < _visibleLayers.size(); vli++) {

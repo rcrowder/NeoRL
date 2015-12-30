@@ -55,8 +55,8 @@ void PredictorSwarm::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &p
 
 	_hiddenSummationTemp = createDoubleBuffer2D(cs, _hiddenSize, CL_RG, CL_FLOAT);
 
-	cs.getQueue().enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
-	cs.getQueue().enqueueFillImage(_hiddenActivations[_back], zeroColor, zeroOrigin, hiddenRegion);
+  neo::enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
+  neo::enqueueFillImage(_hiddenActivations[_back], zeroColor, zeroOrigin, hiddenRegion);
 
 	// Create kernels
 	_activateKernel = cl::Kernel(program.getProgram(), "predActivateSwarm");
@@ -96,7 +96,7 @@ void PredictorSwarm::activate(sys::ComputeSystem &cs, const std::vector<cl::Imag
 		cl::array<cl::size_type, 3> zeroOrigin = { 0, 0, 0 };
 		cl::array<cl::size_type, 3> hiddenRegion = { _hiddenSize.x, _hiddenSize.y, 1 };
 
-		cs.getQueue().enqueueFillImage(_hiddenSummationTemp[_back], zeroColor, zeroOrigin, hiddenRegion);
+    neo::enqueueFillImage(_hiddenSummationTemp[_back], zeroColor, zeroOrigin, hiddenRegion);
 	}
 
 	for (int vli = 0; vli < _visibleLayers.size(); vli++) {

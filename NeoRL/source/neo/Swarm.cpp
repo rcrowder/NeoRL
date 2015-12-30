@@ -44,8 +44,8 @@ void Swarm::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &program,
 		vl._actionsExploratory = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), vld._size.x, vld._size.y);
 		vl._predictedAction = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), vld._size.x, vld._size.y);
 
-		cs.getQueue().enqueueFillImage(vl._actions, zeroColor, zeroOrigin, { static_cast<cl::size_type>(vld._size.x), static_cast<cl::size_type>(vld._size.y), 1 });
-		cs.getQueue().enqueueFillImage(vl._actionsExploratory, zeroColor, zeroOrigin, { static_cast<cl::size_type>(vld._size.x), static_cast<cl::size_type>(vld._size.y), 1 });
+    neo::enqueueFillImage(vl._actions, zeroColor, zeroOrigin, { static_cast<cl::size_type>(vld._size.x), static_cast<cl::size_type>(vld._size.y), 1 });
+    neo::enqueueFillImage(vl._actionsExploratory, zeroColor, zeroOrigin, { static_cast<cl::size_type>(vld._size.x), static_cast<cl::size_type>(vld._size.y), 1 });
 
 		// Q
 		{
@@ -88,9 +88,9 @@ void Swarm::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &program,
 
 	_hiddenSummationTemp = createDoubleBuffer2D(cs, _hiddenSize, CL_RG, CL_FLOAT);
 
-	cs.getQueue().enqueueFillImage(_qStates[_back], zeroColor, zeroOrigin, qRegion);
+  neo::enqueueFillImage(_qStates[_back], zeroColor, zeroOrigin, qRegion);
 
-	cs.getQueue().enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
+  neo::enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
 
 	{
 		int weightDiam = _qRadius * 2 + 1;

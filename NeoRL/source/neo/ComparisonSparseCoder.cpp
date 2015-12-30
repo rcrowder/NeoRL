@@ -66,7 +66,7 @@ void ComparisonSparseCoder::createRandom(sys::ComputeSystem &cs, sys::ComputePro
 	_hiddenActivationSummationTemp = createDoubleBuffer2D(cs, _hiddenSize, CL_R, CL_FLOAT);
 	_hiddenErrorSummationTemp = createDoubleBuffer2D(cs, _hiddenSize, CL_R, CL_FLOAT);
 
-	cs.getQueue().enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
+  neo::enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, hiddenRegion);
 	
 	// Create kernels
 	_forwardErrorKernel = cl::Kernel(program.getProgram(), "cscForwardError");
@@ -171,7 +171,7 @@ void ComparisonSparseCoder::activate(sys::ComputeSystem &cs, const std::vector<c
 		cl::array<cl::size_type, 3> zeroOrigin = { 0, 0, 0 };
 		cl::array<cl::size_type, 3> hiddenRegion = { _hiddenSize.x, _hiddenSize.y, 1 };
 
-		cs.getQueue().enqueueFillImage(_hiddenErrorSummationTemp[_back], zeroColor, zeroOrigin, hiddenRegion);
+    neo::enqueueFillImage(_hiddenErrorSummationTemp[_back], zeroColor, zeroOrigin, hiddenRegion);
 	}
 
 	for (int vli = 0; vli < _visibleLayers.size(); vli++) {
@@ -318,5 +318,5 @@ void ComparisonSparseCoder::clearMemory(sys::ComputeSystem &cs) {
 
 	cl::array<cl::size_type, 3> layerRegion = { _hiddenSize.x, _hiddenSize.y, 1 };
 
-	cs.getQueue().enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, layerRegion);
+  neo::enqueueFillImage(_hiddenStates[_back], zeroColor, zeroOrigin, layerRegion);
 }
