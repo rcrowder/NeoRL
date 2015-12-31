@@ -104,28 +104,28 @@ void neo::randomUniformXZ(cl::Image3D &image3D, sys::ComputeSystem &cs, cl::Kern
 	cs.getQueue().enqueueNDRangeKernel(randomUniform3DXZKernel, cl::NullRange, cl::NDRange(size.x, size.y, size.z));
 }
 
-cl_int neo::enqueueFillImage(const cl::Image& image, cl_float4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events, cl::Event* event)
+cl_int neo::enqueueFillImage(sys::ComputeSystem& cs, const cl::Image& image, cl_float4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events, cl::Event* event)
 {
 #if CL_HPP_TARGET_OPENCL_VERSION >= 120
-  cs.getQueue().enqueueFillImage(image, fillColor, origin, region, events, event);
+  return cs.getQueue().enqueueFillImage(image, fillColor, origin, region, events, event);
 #else
   return CL_INVALID_OPERATION;
 #endif
 }
 
-cl_int neo::enqueueFillImage(const cl::Image& image, cl_int4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events, cl::Event* event)
+cl_int neo::enqueueFillImage(sys::ComputeSystem& cs, const cl::Image& image, cl_int4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events, cl::Event* event)
 {
 #if CL_HPP_TARGET_OPENCL_VERSION >= 120
-  cs.getQueue().enqueueFillImage(image, fillColor, origin, region, events, event);
+  return cs.getQueue().enqueueFillImage(image, fillColor, origin, region, events, event);
 #else
   return CL_INVALID_OPERATION;
 #endif
 }
 
-cl_int neo::enqueueFillImage(const cl::Image& image, cl_uint4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events, cl::Event* event)
+cl_int neo::enqueueFillImage(sys::ComputeSystem& cs, const cl::Image& image, cl_uint4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events, cl::Event* event)
 {
 #if CL_HPP_TARGET_OPENCL_VERSION >= 120
-  cs.getQueue().enqueueFillImage(image, fillColor, origin, region, events, event);
+  return cs.getQueue().enqueueFillImage(image, fillColor, origin, region, events, event);
 #else
   return CL_INVALID_OPERATION;
 #endif

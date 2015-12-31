@@ -106,14 +106,14 @@ void AgentSwarm::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &progr
 
 			_layers[l]._inhibitedAction = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), swarmDescs[1]._size.x, swarmDescs[1]._size.y);
 
-      neo::enqueueFillImage(_layers[l]._inhibitedAction, zeroColor, zeroOrigin, actionRegion);
+      neo::enqueueFillImage(cs, _layers[l]._inhibitedAction, zeroColor, zeroOrigin, actionRegion);
 		}
 
 		cl::array<cl::size_type, 3> layerRegion = { _layerDescs[l]._hiddenSize.x, _layerDescs[l]._hiddenSize.y, 1 };
 
-    neo::enqueueFillImage(_layers[l]._baseLines[_back], zeroColor, zeroOrigin, layerRegion);
-    neo::enqueueFillImage(_layers[l]._reward, zeroColor, zeroOrigin, layerRegion);
-    neo::enqueueFillImage(_layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(cs, _layers[l]._baseLines[_back], zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(cs, _layers[l]._reward, zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(cs, _layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
 	}
 
 	{
@@ -124,7 +124,7 @@ void AgentSwarm::createRandom(sys::ComputeSystem &cs, sys::ComputeProgram &progr
 
 		_lastLayerAction = cl::Image2D(cs.getContext(), CL_MEM_READ_WRITE, cl::ImageFormat(CL_R, CL_FLOAT), _layerDescs.back()._hiddenSize.x, _layerDescs.back()._hiddenSize.y);
 
-    neo::enqueueFillImage(_lastLayerAction, zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(cs, _lastLayerAction, zeroColor, zeroOrigin, layerRegion);
 	}
 
 	_baseLineUpdateKernel = cl::Kernel(program.getProgram(), "phBaseLineUpdate");
@@ -302,6 +302,6 @@ void AgentSwarm::clearMemory(sys::ComputeSystem &cs) {
 	for (int l = 0; l < _layers.size(); l++) {
 		cl::array<cl::size_type, 3> layerRegion = { _layerDescs[l]._hiddenSize.x, _layerDescs[l]._hiddenSize.y, 1 };
 
-    neo::enqueueFillImage(_layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
+    neo::enqueueFillImage(cs, _layers[l]._scHiddenStatesPrev, zeroColor, zeroOrigin, layerRegion);
 	}
 }

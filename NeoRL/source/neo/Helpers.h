@@ -24,7 +24,7 @@ namespace neo {
 	void randomUniformXZ(cl::Image2D &image2D, sys::ComputeSystem &cs, cl::Kernel &randomUniform2DXZKernel, cl_int2 size, cl_float2 range, std::mt19937 &rng);
 	void randomUniformXZ(cl::Image3D &image3D, sys::ComputeSystem &cs, cl::Kernel &randomUniform3DXZKernel, cl_int3 size, cl_float2 range, std::mt19937 &rng);
 
-  cl_int enqueueFillImage(const cl::Image& image, cl_float4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events = NULL, cl::Event* event = NULL);
-  cl_int enqueueFillImage(const cl::Image& image, cl_int4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events = NULL, cl::Event* event = NULL);
-  cl_int enqueueFillImage(const cl::Image& image, cl_uint4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events = NULL, cl::Event* event = NULL);
+  cl_int enqueueFillImage(sys::ComputeSystem& cs, const cl::Image& image, cl_float4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events = NULL, cl::Event* event = NULL);
+  cl_int enqueueFillImage(sys::ComputeSystem& cs, const cl::Image& image, cl_int4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events = NULL, cl::Event* event = NULL);
+  cl_int enqueueFillImage(sys::ComputeSystem& cs, const cl::Image& image, cl_uint4 fillColor, const std::array<cl::size_type, 3>& origin, const std::array<cl::size_type, 3>& region, const std::vector<cl::Event>* events = NULL, cl::Event* event = NULL);
 }

@@ -69,7 +69,7 @@ int main() {
 		}*/
 
 
-    std::cout << "Val: " << vals[0] << " Res: " << res[0] << std::endl;
+    std::cout << "Val: " << vals[0] << " Res: " << res[0] << " Diff: " << (res[0]-vals[0]) << std::endl;
 	}
 
 	return 0;
